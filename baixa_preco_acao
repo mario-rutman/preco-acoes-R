@@ -1,0 +1,21 @@
+# Forma de pegar os preços das ações usando o R. Ainda não adaptei aos meus casos.
+# Quero deixar salvo para quando precisar.
+
+library(quantmod)
+
+get_stock_data <- function(ticker, start_date, end_date) {
+  data <- getSymbols(ticker, src = "yahoo", from = start_date, to = end_date, auto.assign = FALSE)
+  colnames(data) <- gsub(paste0(ticker, "\\."), "", colnames(data))
+  data <- data[, "Adjusted"]
+  return(data)
+}
+
+start_date <- "2023-01-01"
+end_date <- "2024-01-01"
+
+stock_data <- get_stock_data("AAPL", start_date, end_date)
+names(stock_data) <- ("AAPL")
+stock_data$MSFT <- get_stock_data("MSFT", start_date, end_date)
+stock_data$AMZN <- get_stock_data("AMZN", start_date, end_date)
+
+tail(stock_data, 10)
